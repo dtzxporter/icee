@@ -1,6 +1,6 @@
 [package]
 name = "icee"
-version = "0.1.0-alpha0.1"
+version = "0.1.0-alpha0.2"
 edition = "2021"
 description = "A CSS-like style system for the iced ui framework."
 license = "MIT"
