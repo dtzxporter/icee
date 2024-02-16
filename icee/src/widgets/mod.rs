@@ -1,6 +1,9 @@
 mod button;
+mod container;
 
-use iced::{advanced::Widget, Element};
+use iced::advanced::Widget;
+
+use iced::Element;
 
 use crate::Rules;
 
@@ -91,7 +94,7 @@ where
     }
 
     fn diff(&self, tree: &mut iced::advanced::widget::Tree) {
-        self.element.as_widget().diff(&mut tree.children[0])
+        tree.diff_children(&[&self.element])
     }
 
     fn mouse_interaction(

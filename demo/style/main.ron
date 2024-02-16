@@ -2,7 +2,13 @@
     // This is a global style that will effect all other styles because it doesn't
     // specify an id, or a widget to apply the styles to. Styles are overridden from top->bottom.
     Rule(
-        background_color: "blue"
+        background_color: "blue",
+    ),
+    Rule(
+        id: "main",
+        width: 2000,
+        height: 2000,
+        border_radius: 100
     ),
     Rule(
         id: "increment",
@@ -17,7 +23,7 @@
         id: "increment",
         state: Active,
         border_radius: 10,
-        background_color: "red",
+        background_color: "green",
     ),
     Rule(
         id: "decrement",

@@ -1,4 +1,4 @@
-use iced::widget::{button, column, text};
+use iced::widget::{button, column, container, text};
 use iced::{Alignment, Application, Element, Settings};
 
 use icee::command::load_stylesheet;
@@ -63,21 +63,28 @@ impl Application for MyApp {
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
-        column![
-            button("Increment")
-                .on_press(Message::IncrementPressed)
-                .with_stylesheet_id(&self.stylesheet, "increment"),
-            text(self.value).size(50),
-            button("Decrement")
-                .on_press(Message::DecrementPressed)
-                .with_stylesheet_id(&self.stylesheet, "decrement")
-        ]
-        .padding(20)
-        .align_items(Alignment::Center)
+        container(
+            column![
+                button("Increment")
+                    .on_press(Message::IncrementPressed)
+                    .with_stylesheet_id(&self.stylesheet, "increment"),
+                text(self.value).size(50),
+                button("Decrement")
+                    .on_press(Message::DecrementPressed)
+                    .with_stylesheet_id(&self.stylesheet, "decrement")
+            ]
+            .padding(20)
+            .align_items(Alignment::Center),
+        )
+        .with_stylesheet_id(&self.stylesheet, "main")
         .into()
     }
 }
 
 fn main() {
-    MyApp::run(Settings::default()).unwrap()
+    MyApp::run(Settings {
+        antialiasing: true,
+        ..Default::default()
+    })
+    .unwrap()
 }

@@ -72,7 +72,7 @@ impl StyleSheet {
                     Entry::Occupied(mut occupied) => {
                         let mut merged = any.clone();
                         merged.merge(occupied.get());
-                        merged.merge(&rule);
+                        merged.merge(rule);
 
                         *occupied.get_mut() = merged;
                     }

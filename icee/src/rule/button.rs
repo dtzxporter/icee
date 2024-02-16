@@ -10,7 +10,7 @@ use super::parse_color;
 use super::Rules;
 use crate::parse_background_color;
 
-impl StyleSheet for crate::Rules {
+impl StyleSheet for Rules {
     type Style = Theme;
 
     fn active(&self, style: &Self::Style) -> Appearance {
