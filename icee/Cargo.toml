@@ -1,7 +1,10 @@
 [package]
 name = "icee"
-version = "0.1.0"
+version = "0.1.0-alpha0.1"
 edition = "2021"
+description = "A CSS-like style system for the iced ui framework."
+license = "MIT"
+repository = "https://github.com/dtzxporter/icee"
 
 [features]
 default = ["hot-reload"]
