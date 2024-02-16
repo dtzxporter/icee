@@ -1,5 +1,7 @@
+use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 use std::path::Path;
+use std::sync::Arc;
 
 use serde::Deserialize;
 use serde::Serialize;
@@ -60,15 +62,28 @@ impl StyleSheet {
             if matches!(rule.state, RuleState::Any) {
                 any.merge(rule);
             } else {
-                let mut merged = any.clone();
-                merged.merge(rule);
+                match rules.entry(rule.state) {
+                    Entry::Vacant(insert) => {
+                        let mut merged = any.clone();
+                        merged.merge(rule);
 
-                rules.entry(rule.state).or_insert(merged);
+                        insert.insert(merged);
+                    }
+                    Entry::Occupied(mut occupied) => {
+                        let mut merged = any.clone();
+                        merged.merge(occupied.get());
+                        merged.merge(&rule);
+
+                        *occupied.get_mut() = merged;
+                    }
+                }
             }
         }
 
         rules.insert(RuleState::Any, any);
 
-        Rules { rules }
+        Rules {
+            rules: Arc::new(rules),
+        }
     }
 }

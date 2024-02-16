@@ -3,6 +3,7 @@ use iced::widget::button::StyleSheet;
 
 use iced::theme::Button;
 
+use iced::Border;
 use iced::Theme;
 
 use super::parse_color;
@@ -28,6 +29,10 @@ impl StyleSheet for crate::Rules {
                 .as_deref()
                 .and_then(parse_background_color)
                 .or(default.background),
+            border: Border {
+                radius: style.border_radius().unwrap_or(default.border.radius),
+                ..default.border
+            },
             ..default
         }
     }
@@ -47,6 +52,10 @@ impl StyleSheet for crate::Rules {
                     .as_deref()
                     .and_then(parse_background_color)
                     .or(default.background),
+                border: Border {
+                    radius: style.border_radius().unwrap_or(default.border.radius),
+                    ..default.border
+                },
                 ..default
             }
         } else {

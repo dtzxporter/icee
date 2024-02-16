@@ -1,6 +1,7 @@
 mod button;
 
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 use iced::Background;
 use serde::Deserialize;
@@ -38,16 +39,16 @@ pub struct Rule {
     #[serde(default)]
     pub background_color: Option<String>,
     #[serde(default)]
-    pub border_radius: RuleLength,
+    pub border_radius: Option<RuleLength>,
     #[serde(default)]
     pub width: RuleLength,
     #[serde(default)]
-    pub height: String,
+    pub height: RuleLength,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Rules {
-    pub rules: BTreeMap<RuleState, Rule>,
+    pub rules: Arc<BTreeMap<RuleState, Rule>>,
 }
 
 impl Rules {
@@ -63,26 +64,45 @@ impl Rules {
 }
 
 impl Rule {
-    pub fn width(&self) -> iced::Length {
-        match &self.width {
+    pub fn width(&self) -> Option<iced::Length> {
+        Some(match &self.width {
             RuleLength::UnsignedInteger(integer) => iced::Length::Fixed(*integer as f32),
             RuleLength::Float(float) => iced::Length::Fixed(*float),
             RuleLength::String(string) => iced::Length::Fixed(string.parse().unwrap()),
-            RuleLength::None => iced::Length::Shrink,
-        }
+            RuleLength::None => return None,
+        })
     }
 
-    pub fn height(&self) -> iced::Length {
-        if self.height.is_empty() {
-            iced::Length::Shrink
-        } else {
-            iced::Length::Fixed(self.height.parse().unwrap())
-        }
+    pub fn height(&self) -> Option<iced::Length> {
+        Some(match &self.height {
+            RuleLength::UnsignedInteger(integer) => iced::Length::Fixed(*integer as f32),
+            RuleLength::Float(float) => iced::Length::Fixed(*float),
+            RuleLength::String(string) => iced::Length::Fixed(string.parse().unwrap()),
+            RuleLength::None => return None,
+        })
     }
 
+    pub fn border_radius(&self) -> Option<iced::border::Radius> {
+        self.border_radius.as_ref().and_then(|border_radius| {
+            Some(match border_radius {
+                RuleLength::UnsignedInteger(integer) => iced::border::Radius::from(*integer as f32),
+                RuleLength::Float(float) => iced::border::Radius::from(*float),
+                RuleLength::String(string) => {
+                    iced::border::Radius::from(string.parse::<f32>().unwrap())
+                }
+                RuleLength::None => return None,
+            })
+        })
+    }
+
+    #[inline(always)]
     pub fn merge(&mut self, rule: &Rule) {
         self.color = rule.color.clone().or(self.color.take());
-        self.background_color = rule.background_color.clone();
+        self.background_color = rule
+            .background_color
+            .clone()
+            .or(self.background_color.take());
+        self.border_radius = rule.border_radius.clone().or(self.border_radius.take());
         self.width = rule.width.clone();
         self.height = rule.height.clone();
     }

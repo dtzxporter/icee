@@ -9,17 +9,24 @@
         state: Any,
         color: "#dbdbdb",
         background_color: "magenta",
-        width: 100,
+        border_radius: 25,
+        width: 300,
         height: "100",
     ),
     Rule(
         id: "increment",
         state: Active,
+        border_radius: 10,
         background_color: "red",
     ),
     Rule(
         id: "decrement",
         color: "red",
-        background_color: "#DFEAFD"
+        background_color: "teal"
+    ),
+    Rule(
+        id: "decrement",
+        state: Active,
+        background_color: "orange"
     )
 ]

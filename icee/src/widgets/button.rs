@@ -1,4 +1,4 @@
-use iced::Element;
+use super::IceeWidget;
 
 use crate::StyleSheet;
 use crate::WithStyleSheet;
@@ -6,58 +6,39 @@ use crate::WithStyleSheet;
 impl<'a, Message, Theme, Renderer> WithStyleSheet<'a>
     for iced::widget::Button<'a, Message, Theme, Renderer>
 where
-    Theme: iced::widget::button::StyleSheet,
-    Renderer: iced::advanced::Renderer,
+    Message: Clone + 'static,
+    Theme: iced::widget::button::StyleSheet + 'static,
+    <Theme as iced::widget::button::StyleSheet>::Style: From<crate::Rules>,
+    Renderer: iced::advanced::text::Renderer + 'static,
 {
-    type Output = IceeButton<'a, Message, Theme, Renderer>;
+    type Output = IceeWidget<'a, Message, Theme, Renderer>;
 
     fn with_stylesheet_id(self, stylesheet: &'a StyleSheet, id: &'static str) -> Self::Output {
-        IceeButton {
-            widget: self,
-            stylesheet,
-            id: Some(id),
+        let rules = stylesheet.rules("button", Some(id));
+        let any = rules.any();
+
+        let mut element = self.style(rules.clone());
+
+        if let Some(width) = any.width() {
+            element = element.width(width);
+        }
+
+        if let Some(height) = any.height() {
+            element = element.height(height);
+        }
+
+        IceeWidget {
+            element: element.into(),
+            rules,
         }
     }
 
     fn with_stylesheet(self, stylesheet: &'a StyleSheet) -> Self::Output {
-        IceeButton {
-            widget: self,
-            stylesheet,
-            id: None,
+        let rules = stylesheet.rules("button", None);
+
+        IceeWidget {
+            element: self.into(),
+            rules,
         }
-    }
-}
-
-pub struct IceeButton<'a, Message, Theme, Renderer>
-where
-    Theme: iced::widget::button::StyleSheet,
-    Renderer: iced::advanced::Renderer,
-{
-    widget: iced::widget::Button<'a, Message, Theme, Renderer>,
-    stylesheet: &'a StyleSheet,
-    id: Option<&'static str>,
-}
-
-impl<'a, Message, Theme, Renderer> From<IceeButton<'a, Message, Theme, Renderer>>
-    for Element<'a, Message, Theme, Renderer>
-where
-    Message: Clone + 'static,
-    Theme: iced::widget::button::StyleSheet + 'a,
-    <Theme as iced::widget::button::StyleSheet>::Style: From<crate::Rules>,
-    Renderer: iced::advanced::Renderer + 'a,
-{
-    fn from(
-        button: IceeButton<'a, Message, Theme, Renderer>,
-    ) -> Element<'a, Message, Theme, Renderer> {
-        let style = button.stylesheet.rules("button", button.id);
-
-        Element::new(
-            button
-                .widget
-                .width(style.any().width())
-                .height(style.any().height())
-                .clip(false)
-                .style(style),
-        )
     }
 }
