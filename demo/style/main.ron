@@ -1,0 +1,25 @@
+[
+    // This is a global style that will effect all other styles because it doesn't
+    // specify an id, or a widget to apply the styles to. Styles are overridden from top->bottom.
+    Rule(
+        background_color: "blue"
+    ),
+    Rule(
+        id: "increment",
+        state: Any,
+        color: "#dbdbdb",
+        background_color: "magenta",
+        width: 100,
+        height: "100",
+    ),
+    Rule(
+        id: "increment",
+        state: Active,
+        background_color: "red",
+    ),
+    Rule(
+        id: "decrement",
+        color: "red",
+        background_color: "#DFEAFD"
+    )
+]

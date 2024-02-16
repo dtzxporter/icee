@@ -1,2 +1,2 @@
 # icee
- A CSS style system for the iced ui framework.
+A CSS style system for the iced ui framework.

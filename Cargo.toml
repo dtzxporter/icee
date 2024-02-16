@@ -1,0 +1,14 @@
+[workspace]
+members = ["icee", "demo"]
+resolver = "2"
+
+[workspace.dependencies]
+iced = { version = "0.12", features = ["advanced", "wgpu"] }
+serde = { version = "1.0", features = ["derive"] }
+ron = "0.8.1"
+flume = "0.11"
+csscolorparser = "0.6.2"
+notify = "6.1.1"
+
+[profile.dev]
+opt-level = 2

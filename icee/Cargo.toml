@@ -1,0 +1,20 @@
+[package]
+name = "icee"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["hot-reload"]
+
+# Enables a subscription method that can be used to hot-reload a stylesheet.
+hot-reload = ["notify", "flume"]
+# Enables runtime debug logging for non-critical errors.
+debug = []
+
+[dependencies]
+iced.workspace = true
+serde.workspace = true
+csscolorparser.workspace = true
+ron.workspace = true
+notify = { workspace = true, optional = true }
+flume = { workspace = true, optional = true }
